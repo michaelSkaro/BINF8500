@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class PSSM {
-	
+	 
 	/*
 	 * usage: javac PSSM.java 
 	 * 			java PSSM arg0 arg1 arg2
@@ -132,12 +132,13 @@ public class PSSM {
 		for(int i=0; i<scoreFreqMatrix.length; i++){
 			for(int j =0; j<scoreFreqMatrix[i].length; j++){
 				// guard against 0
-				scoreFreqMatrix[i][j] = scoreFreqMatrix[i][j] +0.01;
+				scoreFreqMatrix[i][j] = scoreFreqMatrix[i][j] +0.01; // try different scores
 				// make probability matrix where the max score would be a 100% chance of having 
 				// the letter in that position
 				scoreFreqMatrix[i][j] = scoreFreqMatrix[i][j]/scoreFreqMatrix[i].length;
-				// log probability, with .25 as distribution of As, Cs,Ts, Gs
-				scoreFreqMatrix[i][j] = Math.log(scoreFreqMatrix[i][j]/0.25);
+				// log probability, 
+				//  divide by 0.25 for the As, C, Ts and Gs to include background model
+				scoreFreqMatrix[i][j] = Math.log(scoreFreqMatrix[i][j]/0.25); // needs improvement 
 				
 			}
 		}
@@ -147,6 +148,7 @@ public class PSSM {
 		return scoreFreqMatrix;
 	}
 	
+
 	
 	private static void printScoreArray(double[][] scoreFreqMatrix) {
 		for(int i=0; i<scoreFreqMatrix.length; i++)
@@ -158,7 +160,51 @@ public class PSSM {
 	
 	
 	
-	// okay so now we need to slide through the file in windows and if that 
+	// okay so I can slide through the string but i am 
+	// not sure how to score it against the matrix
+	
+	
+	
+	public static ArrayList<String> slidingWindow(String fileAsString, String [][] motifMatrix, double [][] scoreFreqmatrix){
+		//ACTG
+		// make and array list
+		
+		// slide in windows of n and increment by 1 until i find a window without sufficient space and then stop
+		
+		
+		// assign each base a score in window based on the position it is in
+		
+		// score the entire seq
+		
+		// filter the seqs,
+			//if the seq gets a score high enough: keep the position, the score and the string of the window.
+		
+		ArrayList<String> keeps = new ArrayList<String>();
+		
+		ArrayList<Integer> positions = new ArrayList<Integer>();
+		
+		int number =11;
+		
+		
+		
+		for(int i=0; i<fileAsString.length(); i++){
+			String window = fileAsString.substring(i, number);
+			for(int j=0; j< scoreFreqmatrix.length; j++){
+				for(int k=0; k<scoreFreqmatrix[j].length; j++){
+					// slide, score and compare
+					// my window should get score based on the identity of the letter at the position
+					
+				}
+			}
+		}
+		
+		
+		
+		
+		
+		return null;
+		
+	}
 	
 	
 	
