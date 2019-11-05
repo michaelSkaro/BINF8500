@@ -9,4 +9,9 @@ Needleman-Wunch (NW.java) : instastiate a global sequence alignment to align fas
                             
 Position Specific Scoring Matrix(PSSM.java): The position specific scoring matrix is a 
                           supervised motif finding method for TF binding sites.
+Gibbs Sampler for Motif Finding (GS.java): In this project we will use unsupervised motif 
+                          determination by sampling DNA sequences for an optimal recurrent
+                          motif generated in a ChIP-Seq experiment. The motif window size,
+                          motif sequence and motif position in each of the ChIP sequences
+                          will be returned.
 
