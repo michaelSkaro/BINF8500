@@ -129,30 +129,24 @@ public class GS {
 				randomEnd= randomEnd -17;
 			
 			}
-			
+			ArrayList<String> ar = new ArrayList<String>();
 			for(int j=0; j<motifMatrix[i].length; j++){
 				// in this section will assess whether the i and j 
 				// term is >= the start position or =< the endposition 
 				// of the random window
-				ArrayList<String> ar = new ArrayList<String>( ); 
+				 
 				if(j>=randomStart && j <= randomEnd){
 					ar.add(motifMatrix[i][j]);
-					for(int k = 0; k<ar.size(); k++){
-						candidateMatrix[i][k] = ar.get(k);// what the fuck ?
-					}
+					
 					
 					//candidateMatrix[i][j] = motifMatrix[i][j];
-					
-					
-					
-					
-					
 					//System.out.print(j + " ");
 					System.out.print(motifMatrix[i][j] + " ");
 					//candidateMatrix[i][j]=motifMatrix[i][j];
-					// candidate j is too big assess the 
-					
+					// candidate j is too big assess the 	
 				}
+				
+				
 				
 				if(j > randomEnd && j <= randomEnd+1){
 					System.out.print("\n\n");
@@ -167,6 +161,12 @@ public class GS {
 				// the candidate matrix
 				
 			}
+			
+			for(int k = 0; k<ar.size(); k++){
+				candidateMatrix[i][k] = ar.get(k);// what the fuck ?
+			}
+			
+			
 		}
 		
 		
