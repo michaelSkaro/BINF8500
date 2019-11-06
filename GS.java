@@ -4,6 +4,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -107,34 +108,100 @@ public class GS {
 
 	// pick the windows that we will be to construct a PSSM
 	
-	public static String [] makeCandidatematrix(String [][] motifMatrix, double windowSize, int min, int max){
+	public static String [][] makeCandidatematrix(String [][] motifMatrix, double windowSize, int min, int max){
 		
 		// make matrix to 
-		String []candidateMatrix = new String [motifMatrix.length];
+		String [][]candidateMatrix = new String [motifMatrix.length][(int) windowSize];
+		
+		// iterate over the motif matrix and on each line assign a window randomly 
+		// assign each letter in that window into a spot in the candidateMatrix
+		// This matrix will serve as the PSSM
 		
 		for(int i=0; i<motifMatrix.length; i++){
 			
-			int randomStart = new Random().nextInt((max - min) + 1) + min;
+			// make a start position
+			int randomStart = new Random().nextInt(183);
+			int randomEnd = randomStart + 17;
+			System.out.println(randomStart + " "+ randomEnd +"\n");
 			
+			if(randomEnd >= 201){ 
+				randomStart = randomStart - 17;
+				randomEnd= randomEnd -17;
+			
+			}
+			
+			for(int j=0; j<motifMatrix[i].length; j++){
+				// in this section will assess whether the i and j 
+				// term is >= the start position or =< the endposition 
+				// of the random window
+				ArrayList<String> ar = new ArrayList<String>( ); 
+				if(j>=randomStart && j <= randomEnd){
+					ar.add(motifMatrix[i][j]);
+					for(int k = 0; k<ar.size(); k++){
+						candidateMatrix[i][k] = ar.get(k);// what the fuck ?
+					}
+					
+					//candidateMatrix[i][j] = motifMatrix[i][j];
+					
+					
+					
+					
+					
+					//System.out.print(j + " ");
+					System.out.print(motifMatrix[i][j] + " ");
+					//candidateMatrix[i][j]=motifMatrix[i][j];
+					// candidate j is too big assess the 
+					
+				}
+				
+				if(j > randomEnd && j <= randomEnd+1){
+					System.out.print("\n\n");
+				}
+				
+				else{
+					//do nothing
+				}
+				
+				
+				// if this is true we will assign that term to a position in 
+				// the candidate matrix
+				
+			}
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		/*
+		for(int i=0; i<motifMatrix.length; i++){
+			
+			int randomStart = new Random().nextInt((max - min) + 1) + min;
 			int randomEnd = randomStart + 17;
 			
-			if(randomEnd >= 201){
+			if(randomEnd >= 201){ 
 				randomStart = randomStart - 17;
 				randomEnd= randomEnd -17;
 			}
+			for(int j=0; j<motifMatrix[i].length; j++){
+				while(j>= randomStart && j<= randomEnd){
+					candidateMatrix[i][j] = motifMatrix[i][j];
+					System.out.println(motifMatrix[i][j]);
+					j++;
+					
+				
+				}
+			}
 			
-			String window ="";
 			
-			String Seq = Arrays.toString(motifMatrix[i]);
-			System.out.println(Seq);
-			//candidateMatrix[i] = Seq.substring(randomStart, randomEnd).split("");
-			candidateMatrix[i] = Seq.substring(randomStart, randomEnd);
-			
-		}
+		}*/
 		
 		System.out.println("Candidates Matrix");
 		for (int i = 0; i < candidateMatrix.length; i++) {
-			System.out.print(candidateMatrix[i].toString());
+			System.out.print(Arrays.toString(candidateMatrix[i]));
 		}
 		System.out.println("\n");
 		
@@ -183,7 +250,7 @@ public class GS {
 		//  window width
 		
 		double windowSize = 18;
-		int min = 0;
+		
 		
 		// read in the fasta file
 
@@ -194,11 +261,12 @@ public class GS {
 		String filename = readFileAsString(path);
 
 		String[][] motifMatrix = readMotifs(path);
-		int max = motifMatrix.length;
+		int min = 0;
+		int max = motifMatrix[0].length;
 		
 		double[][] backgroundFreq = makeBackgroundFreq(motifMatrix);
 		
-		String [] Candidatematrix = makeCandidatematrix(motifMatrix, windowSize, min, max);
+		String [][] candidatematrix = makeCandidatematrix(motifMatrix, windowSize, min, max);
 		
 		double[][] scoreFreqMatrix = makeFreqScoreMatrix(motifMatrix);
 
