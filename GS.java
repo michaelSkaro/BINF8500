@@ -104,138 +104,127 @@ public class GS {
 
 		return backgroundFreq;
 	}
-	
 
 	// pick the windows that we will be to construct a PSSM
-	
-	public static String [][] makeCandidatematrix(String [][] motifMatrix, double windowSize, int min, int max){
-		
-		// make matrix to 
-		String [][]candidateMatrix = new String [motifMatrix.length][(int) windowSize];
-		
-		// iterate over the motif matrix and on each line assign a window randomly 
+
+	public static String[][] makeCandidatematrix(String[][] motifMatrix, double windowSize, int min, int max) {
+
+		// make matrix to
+		String[][] candidateMatrix = new String[motifMatrix.length][(int) windowSize];
+
+		// iterate over the motif matrix and on each line assign a window
+		// randomly
 		// assign each letter in that window into a spot in the candidateMatrix
 		// This matrix will serve as the PSSM
-		
-		for(int i=0; i<motifMatrix.length; i++){
-			
+
+		for (int i = 0; i < motifMatrix.length; i++) {
+
 			// make a start position
 			int randomStart = new Random().nextInt(183);
 			int randomEnd = randomStart + 17;
-			System.out.println(randomStart + " "+ randomEnd +"\n");
-			
-			if(randomEnd >= 201){ 
+			System.out.println(randomStart + " " + randomEnd + "\n");
+
+			if (randomEnd >= 201) {
 				randomStart = randomStart - 17;
-				randomEnd= randomEnd -17;
-			
+				randomEnd = randomEnd - 17;
+
 			}
 			ArrayList<String> ar = new ArrayList<String>();
-			for(int j=0; j<motifMatrix[i].length; j++){
-				// in this section will assess whether the i and j 
-				// term is >= the start position or =< the endposition 
+			for (int j = 0; j < motifMatrix[i].length; j++) {
+				// in this section will assess whether the i and j
+				// term is >= the start position or =< the endposition
 				// of the random window
-				 
-				if(j>=randomStart && j <= randomEnd){
+
+				if (j >= randomStart && j <= randomEnd) {
 					ar.add(motifMatrix[i][j]);
-					
-					
-					//candidateMatrix[i][j] = motifMatrix[i][j];
-					//System.out.print(j + " ");
+
+					// candidateMatrix[i][j] = motifMatrix[i][j];
+					// System.out.print(j + " ");
 					System.out.print(motifMatrix[i][j] + " ");
-					//candidateMatrix[i][j]=motifMatrix[i][j];
-					// candidate j is too big assess the 	
+					// candidateMatrix[i][j]=motifMatrix[i][j];
+					// candidate j is too big assess the
 				}
-				
-				
-				
-				if(j > randomEnd && j <= randomEnd+1){
+
+				if (j > randomEnd && j <= randomEnd + 1) {
 					System.out.print("\n\n");
 				}
-				
-				else{
-					//do nothing
+
+				else {
+					// do nothing
 				}
-				
-				
-				// if this is true we will assign that term to a position in 
+
+				// if this is true we will assign that term to a position in
 				// the candidate matrix
-				
+
 			}
-			
-			for(int k = 0; k<ar.size(); k++){
+
+			for (int k = 0; k < ar.size(); k++) {
 				candidateMatrix[i][k] = ar.get(k);// what the fuck ?
 			}
-			
-			
+
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-		/*
-		for(int i=0; i<motifMatrix.length; i++){
-			
-			int randomStart = new Random().nextInt((max - min) + 1) + min;
-			int randomEnd = randomStart + 17;
-			
-			if(randomEnd >= 201){ 
-				randomStart = randomStart - 17;
-				randomEnd= randomEnd -17;
-			}
-			for(int j=0; j<motifMatrix[i].length; j++){
-				while(j>= randomStart && j<= randomEnd){
-					candidateMatrix[i][j] = motifMatrix[i][j];
-					System.out.println(motifMatrix[i][j]);
-					j++;
-					
-				
-				}
-			}
-			
-			
-		}*/
-		
+
 		System.out.println("Candidates Matrix");
 		for (int i = 0; i < candidateMatrix.length; i++) {
-			System.out.print(Arrays.toString(candidateMatrix[i]));
+			System.out.print(Arrays.toString(candidateMatrix[i]) + "\n");
 		}
 		System.out.println("\n");
-		
-		
+
 		return candidateMatrix;
 	}
-	
 
-	public static double[][] makeFreqScoreMatrix(String[][] motifMatrix) {
+	public static double[][] makeFreqScoreMatrix(String[][] candidateMatrix) {
 
-		double[][] scoreFreqMatrix = new double[motifMatrix[0].length][4];
+		double[][] scoreFreqMatrix = new double[candidateMatrix[0].length][4];
 
-		for (int i = 0; i < motifMatrix.length; i++) {
-			for (int j = 0; j < motifMatrix[i].length; j++) {
+		for (int i = 0; i < candidateMatrix.length; i++) {
+			for (int j = 0; j < candidateMatrix[i].length; j++) {
 
-				if (motifMatrix[i][j].equals("A")) {
+				if (candidateMatrix[i][j].equals("A")) {
 					scoreFreqMatrix[j][0] = scoreFreqMatrix[j][0] + 1;
 				}
 
-				else if (motifMatrix[i][j].equals("C")) {
+				else if (candidateMatrix[i][j].equals("C")) {
 					scoreFreqMatrix[j][1] = scoreFreqMatrix[j][1] + 1;
 				}
 
-				else if (motifMatrix[i][j].equals("T")) {
+				else if (candidateMatrix[i][j].equals("T")) {
 					scoreFreqMatrix[j][2] = scoreFreqMatrix[j][2] + 1;
 				}
 
-				else if (motifMatrix[i][j].equals("G")) {
+				else if (candidateMatrix[i][j].equals("G")) {
 					scoreFreqMatrix[j][3] = scoreFreqMatrix[j][3] + 1;
 				}
 			}
 		}
 
-		System.out.println("Position Frequencies");
+		System.out.println("Position FreqMatrix");
+		for (int i = 0; i < scoreFreqMatrix.length; i++) {
+			System.out.println(Arrays.toString(scoreFreqMatrix[i]));
+		}
+		System.out.println("\n");
+
+		// guard against the 0 frequency with pseudocounts
+		// convert to a probability
+		//
+		for (int i = 0; i < scoreFreqMatrix.length; i++) {
+			for (int j = 0; j < scoreFreqMatrix[i].length; j++) {
+				// guard against 0
+				scoreFreqMatrix[i][j] = scoreFreqMatrix[i][j] + 0.25; // try
+																		// different
+																		// scores
+				// probability
+				scoreFreqMatrix[i][j] = scoreFreqMatrix[i][j] / scoreFreqMatrix[i].length;
+				// log probability,
+				scoreFreqMatrix[i][j] = Math.log(scoreFreqMatrix[i][j] / 0.25); // needs
+																				// improvement
+
+			}
+		}
+
+		// System.out.print("motif scoring matrix made \n\n");
+
+		System.out.println("Scoring position matrix:\n");
 		for (int i = 0; i < scoreFreqMatrix.length; i++) {
 			System.out.println(Arrays.toString(scoreFreqMatrix[i]));
 		}
@@ -246,12 +235,11 @@ public class GS {
 
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
-		
-		//  window width
-		
+
+		// window width
+
 		double windowSize = 18;
-		
-		
+
 		// read in the fasta file
 
 		String path = "/Users/michaelskaro/Desktop/BINF8500/Assignment_5_BINF8500/SalmonellaRpoN-sequences-ChIP.fasta";
@@ -263,12 +251,12 @@ public class GS {
 		String[][] motifMatrix = readMotifs(path);
 		int min = 0;
 		int max = motifMatrix[0].length;
-		
+
 		double[][] backgroundFreq = makeBackgroundFreq(motifMatrix);
-		
-		String [][] candidatematrix = makeCandidatematrix(motifMatrix, windowSize, min, max);
-		
-		double[][] scoreFreqMatrix = makeFreqScoreMatrix(motifMatrix);
+
+		String[][] candidatematrix = makeCandidatematrix(motifMatrix, windowSize, min, max);
+
+		double[][] scoreFreqMatrix = makeFreqScoreMatrix(candidatematrix);
 
 		/*
 		 * Assign n windows leave one seq out to assess calculate background
